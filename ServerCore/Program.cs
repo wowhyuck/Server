@@ -14,51 +14,48 @@ namespace ServerCore
 
     class Program
     {
-        static int x = 0;
-        static int y = 0;
-        static int r1 = 0;
-        static int r2 = 0;
+        static int number = 0;
 
+        // atomic = 원자성
         static void Thread_1()
         {
-            y = 1;      // Store y
+            for (int i = 0; i < 10000; i++)
+            {   // 어셈블리어에선 3단계로 이루어짐 = number++
+                //number++;
 
-            // -----------------------------
-            Thread.MemoryBarrier();
+                //int temp = number;  // 0
+                //temp += 1;          // 1
+                //number = temp;      // number = 1
 
-            r1 = x;     // Load x
+                // All or Nothing
+                Interlocked.Increment(ref number);
+            }
         }
 
         static void Thread_2()
         {
-            x = 1;      // Store x
+            for (int i = 0; i < 10000; i++)
+            {
+                //number--;
 
-            // -----------------------------
-            Thread.MemoryBarrier();
+                //int temp = number;  // 0
+                //temp -= 1;          // -1
+                //number = temp;      // number = -1
 
-            r2 = y;     // Load y
+                Interlocked.Decrement(ref number);
+            }
         }
 
         static void Main(string[] args)
         {
-            int count = 0;
-            while(true)
-            {
-                count++;
-                x = y = r1 = r2 = 0;
+            Task t1 = new Task(Thread_1);
+            Task t2 = new Task(Thread_2);
+            t1.Start();
+            t2.Start();
 
-                Task t1 = new Task(Thread_1);
-                Task t2 = new Task(Thread_2);
-                t1.Start();
-                t2.Start();
+            Task.WaitAll(t1, t2);
 
-                Task.WaitAll(t1, t2);
-
-                if (r1 == 0 && r2 == 0)
-                    break;
-            }
-
-            Console.WriteLine($"{count}번만에 빠져나옴");
+            Console.WriteLine(number);
         }
     }
 }
