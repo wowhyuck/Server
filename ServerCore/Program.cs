@@ -4,45 +4,39 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    // 메모리 베리어
-    // A. 코드 재배치 억제
-    // B. 가시성
-
-    // 1) Full Memory Barrier (ASM MFENCE, C# Thread.MemoryBarrier) : Store/Load 둘다 막는다
-    // 2) Store Memry Barrier (ASM SFENCE) : Store만 막는다
-    // 3) Load Memry Barrier (ASM LFENCE) : Load만 막는다
-
     class Program
     {
         static int number = 0;
+        static object _obj = new object();
 
-        // atomic = 원자성
         static void Thread_1()
         {
-            for (int i = 0; i < 10000; i++)
-            {   // 어셈블리어에선 3단계로 이루어짐 = number++
+            for (int i = 0; i < 100000; i++)
+            {
+                // 상호 배제 Mutual Exclusive
+                //Monitor.Enter(_obj);        // 문을 잠그는 행위
                 //number++;
+                //Monitor.Exit(_obj);         // 잠금을 풀어준다
 
-                //int temp = number;  // 0
-                //temp += 1;          // 1
-                //number = temp;      // number = 1
-
-                // All or Nothing
-                Interlocked.Increment(ref number);
+                lock(_obj)
+                {
+                    number++;
+                }
             }
         }
 
         static void Thread_2()
         {
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 100000; i++)
             {
+                //Monitor.Enter(_obj);
                 //number--;
+                //Monitor.Exit(_obj);
 
-                //int temp = number;  // 0
-                //temp -= 1;          // -1
-                //number = temp;      // number = -1
-
-                Interlocked.Decrement(ref number);
+                lock (_obj)
+                {
+                    number--;
+                }
             }
         }
 
