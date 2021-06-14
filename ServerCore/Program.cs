@@ -4,6 +4,55 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
+    class FastLock
+    {
+        public int id;
+    }
+
+    class SessionManager
+    {
+        FastLock I;
+        static object _lock = new object();
+
+        static public void TestSession()
+        {
+            lock(_lock)
+            {
+
+            }
+        }
+
+        static public void Test()
+        {
+            lock(_lock)
+            {
+                UserManager.TestUser();
+            }
+        }
+    }
+
+    class UserManager
+    {
+        FastLock I;
+        static object _lock = new object();
+
+        static public void Test()
+        {
+            lock (_lock)
+            {
+                SessionManager.TestSession();
+            }
+        }
+
+        static public void TestUser()
+        {
+            lock (_lock)
+            {
+
+            }
+        }
+    }
+
     class Program
     {
         static int number = 0;
@@ -11,32 +60,17 @@ namespace ServerCore
 
         static void Thread_1()
         {
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 100; i++)
             {
-                // 상호 배제 Mutual Exclusive
-                //Monitor.Enter(_obj);        // 문을 잠그는 행위
-                //number++;
-                //Monitor.Exit(_obj);         // 잠금을 풀어준다
-
-                lock(_obj)
-                {
-                    number++;
-                }
+                SessionManager.Test();
             }
         }
 
         static void Thread_2()
         {
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 100; i++)
             {
-                //Monitor.Enter(_obj);
-                //number--;
-                //Monitor.Exit(_obj);
-
-                lock (_obj)
-                {
-                    number--;
-                }
+                UserManager.Test();
             }
         }
 
@@ -45,6 +79,9 @@ namespace ServerCore
             Task t1 = new Task(Thread_1);
             Task t2 = new Task(Thread_2);
             t1.Start();
+
+            Thread.Sleep(100);
+
             t2.Start();
 
             Task.WaitAll(t1, t2);
