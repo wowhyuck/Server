@@ -32,9 +32,9 @@ namespace ServerCore
         {
             args.AcceptSocket = null;
 
-            bool panding = _listenSocket.AcceptAsync(args);
+            bool pending = _listenSocket.AcceptAsync(args);
 
-            if (panding == false)
+            if (pending == false)
                 OnAcceptCompleted(null, args);
         }
 
