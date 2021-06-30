@@ -39,7 +39,7 @@ class {0}
 {{
     {1}
 
-    public void Read(ArraySegment<byte> seement)
+    public void Read(ArraySegment<byte> segment)
     {{
         ushort count = 0;
 
@@ -80,7 +80,7 @@ class {0}
         // {3} 멤버 변수 Read
         // {4} 멤버 변수 Write
         public static string memberListFormat =
-@"public struct {0}
+@"public class {0}
 {{
     {2}
 
@@ -144,7 +144,7 @@ count += sizeof({1});
         // {0} 변수 이름
         // {0} 변수 형식
         public static string writeByteFormat =
-@"seement.Array[segment.Offset + count] = (byte)this.{0};
+@"segment.Array[segment.Offset + count] = (byte)this.{0};
 count += sizeof({1});
 ";
 
