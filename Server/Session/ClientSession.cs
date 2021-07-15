@@ -9,7 +9,7 @@ using ServerCore;
 
 namespace Server
 {
-	class ClientSession : PacketSession
+    class ClientSession : PacketSession
     {
         public int SessionId { get; set; }
         public GameRoom Room { get; set; }
@@ -29,7 +29,7 @@ namespace Server
         public override void OnDicconnected(EndPoint endPoint)
         {
             SessionManager.Instance.Remove(this);
-            if(Room!=null)
+            if (Room != null)
             {
                 Room.Leave(this);
                 Room = null;

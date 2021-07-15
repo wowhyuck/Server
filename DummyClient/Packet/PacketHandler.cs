@@ -1,12 +1,16 @@
-﻿using ServerCore;
+﻿using DummyClient;
+using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 class PacketHandler
 {
-    public static void S_TestPacketHandler(PacketSession session, IPacket packet)
+    public static void S_ChatHandler(PacketSession session, IPacket packet)
     {
+        S_Chat chatPacket = packet as S_Chat;
+        ServerSession severSession = session as ServerSession;
 
+        Console.WriteLine(chatPacket.chat);
     }
 }
