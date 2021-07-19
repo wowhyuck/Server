@@ -12,8 +12,15 @@ class PacketHandler
         S_Chat chatPacket = packet as S_Chat;
         ServerSession severSession = session as ServerSession;
 
-        if (chatPacket.playerId == 1)
+        //if (chatPacket.playerId == 1)
+        {
             Debug.Log(chatPacket.chat);
+            GameObject go = GameObject.Find("Player");
+            if (go == null)
+                Debug.Log("Player not found");
+            else
+                Debug.Log("Player found");
+        }
         //Console.WriteLine(chatPacket.chat);
     }
 }
