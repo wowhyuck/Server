@@ -160,7 +160,6 @@ public class S_PlayerList : IPacket
 	
 	    public bool Write(ArraySegment<byte> segment, ref ushort count)
 	    {
-	        bool success = true;
 	        Array.Copy(BitConverter.GetBytes(this.isSelf), 0, segment.Array, segment.Offset + count, sizeof(bool));
 			count += sizeof(bool);
 			
