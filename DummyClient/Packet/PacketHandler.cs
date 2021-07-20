@@ -6,11 +6,27 @@ using System.Text;
 
 class PacketHandler
 {
-    public static void S_ChatHandler(PacketSession session, IPacket packet)
+    public static void S_BroadcastEnterGameHandler(PacketSession session, IPacket packet)
     {
-        S_Chat chatPacket = packet as S_Chat;
+        S_BroadcastEnterGame chatPacket = packet as S_BroadcastEnterGame;
         ServerSession severSession = session as ServerSession;
+    }
 
-        //Console.WriteLine(chatPacket.chat);
+    public static void S_BroadcastLeaveGameHandler(PacketSession session, IPacket packet)
+    {
+        S_BroadcastLeaveGame chatPacket = packet as S_BroadcastLeaveGame;
+        ServerSession severSession = session as ServerSession;
+    }
+
+    public static void S_PlayerListHandler(PacketSession session, IPacket packet)
+    {
+        S_PlayerList chatPacket = packet as S_PlayerList;
+        ServerSession severSession = session as ServerSession;
+    }
+
+    public static void S_BroadcastMoveHandler(PacketSession session, IPacket packet)
+    {
+        S_BroadcastMove chatPacket = packet as S_BroadcastMove;
+        ServerSession severSession = session as ServerSession;
     }
 }
